@@ -12,16 +12,24 @@ export const invitation = {
   },
 
   wedding: {
-    title: "The Wedding Of",
-    date: "20 September 2026",
-    day: "Minggu",
-    time: "10.00 WIB - Selesai",
-    venue: "Gedung Serbaguna",
-    address: "Jl. Contoh No. 123, Surabaya",
-  },
+    title: "The Wedding Reception Of",
 
-  cover:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000",
+    date: "20 September 2026",
+
+    day: "Minggu",
+
+    time: "10.00 WIB - Selesai",
+
+    venue: "Gedung Serbaguna",
+
+    address: "Jl. Contoh No. 123, Surabaya",
+
+    calendar: {
+      start: "20260920T100000",
+      end: "20260920T140000",
+      timezone: "Asia/Jakarta",
+    },
+  },
 
   gallery: [
     "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
