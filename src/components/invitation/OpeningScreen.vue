@@ -17,7 +17,6 @@ onUnmounted(() => {
 })
 </script>
 
-
 <template>
 
     <Transition name="opening">
@@ -30,18 +29,37 @@ onUnmounted(() => {
 
             <div class="background-layer">
 
-                <!--
-                    Z-INDEX 0
-                    Base background
-                -->
+                <!-- BASE BACKGROUND -->
+
                 <div class="background-base"></div>
 
 
+                <!-- COVER PHOTO -->
+
+                <div class="opening-photo"></div>
+
+
+                <!-- PHOTO OVERLAY -->
+
+                <div class="opening-overlay"></div>
+
+
+                <!-- VIGNETTE -->
+
+                <div class="opening-vignette"></div>
+
+
                 <!-- =================================================
-                     Z-INDEX 1
-                     JAVA ORNAMENT
-                     
-                     Ornament berada DI BAWAH FOTO
+                     ORNAMENT CIRCLE
+
+                     SECARA POSISI:
+                     BERADA DI BAGIAN BAWAH.
+
+                     SECARA LAYER:
+                     DI ATAS COVER.
+
+                     WAYANG AKAN BERADA DI ATAS ORNAMENT.
+                     GOLD AKAN BERADA DI ATAS WAYANG.
                      ================================================= -->
 
                 <div class="ornament ornament-kawung">
@@ -58,34 +76,7 @@ onUnmounted(() => {
                 </div>
 
 
-                <!-- =================================================
-                     Z-INDEX 2
-                     PHOTO
-                     ================================================= -->
-
-                <div class="opening-photo"></div>
-
-
-                <!-- =================================================
-                     Z-INDEX 3
-                     PHOTO OVERLAY
-                     ================================================= -->
-
-                <div class="opening-overlay"></div>
-
-
-                <!-- =================================================
-                     Z-INDEX 4
-                     VIGNETTE
-                     ================================================= -->
-
-                <div class="opening-vignette"></div>
-
-
-                <!-- =================================================
-                     Z-INDEX 5
-                     SOFT GOLD ATMOSPHERE
-                     ================================================= -->
+                <!-- GOLD ATMOSPHERE -->
 
                 <div class="gold-atmosphere"></div>
 
@@ -98,10 +89,7 @@ onUnmounted(() => {
 
             <main class="opening-content">
 
-
-                <!-- =================================================
-                     GUNUNGAN
-                     ================================================= -->
+                <!-- GUNUNGAN -->
 
                 <div class="gunungan-wrapper">
 
@@ -116,51 +104,46 @@ onUnmounted(() => {
                 </div>
 
 
-                <!-- =================================================
-                     WEDDING LABEL
-                     ================================================= -->
+                <!-- WEDDING LABEL -->
 
                 <div class="wedding-label">
                     THE WEDDING RECEPTION OF
                 </div>
 
 
-                <!-- =================================================
-                     COUPLE NAME
-                     ================================================= -->
+                <!-- COUPLE NAME -->
 
                 <h1 class="couple-names">
 
                     <span class="name">
-                        Nadia
+                        HADIYAN
                     </span>
 
-                    <span class="ampersand">
+                    <!-- <span class="ampersand">
                         &amp;
                     </span>
 
                     <span class="name">
                         Shandy
-                    </span>
+                    </span> -->
 
                 </h1>
 
 
-                <!-- =================================================
-                     GUEST
-                     ================================================= -->
-
+                <!-- GUEST -->
                 <div class="guest-section">
 
                     <p class="guest-label">
                         Kepada Yth. Bapak/Ibu/Saudara/i
                     </p>
 
-
                     <p class="guest-name">
-                        Nama Tamu
+                        Pengurus Maktabah
                     </p>
 
+                    <p class="guest-address">
+                        Jl. Mojo No. 123, Kota Kediri
+                    </p>
 
                     <p class="guest-note">
                         *Mohon maaf apabila ada kesalahan pada<br />
@@ -169,10 +152,7 @@ onUnmounted(() => {
 
                 </div>
 
-
-                <!-- =================================================
-                     OPEN BUTTON
-                     ================================================= -->
+                <!-- OPEN BUTTON -->
 
                 <button type="button" class="opening-button" @click="openInvitation">
 
@@ -191,7 +171,6 @@ onUnmounted(() => {
 
                     </svg>
 
-
                     <span>
                         Buka Undangan
                     </span>
@@ -203,10 +182,21 @@ onUnmounted(() => {
 
             <!-- =====================================================
                  WAYANG LEFT
-                 
-                 Z-INDEX 35
-                 DI ATAS FOTO
-                 TAPI DI BAWAH GOLD
+
+                 LAYER:
+                 COVER
+                   ↓
+                 ORNAMENT
+                   ↓
+                 CONTENT
+                   ↓
+                 WAYANG
+                   ↓
+                 GOLD
+                   ↓
+                 TEXT
+                   ↓
+                 FRAME
                  ===================================================== -->
 
             <div class="wayang wayang-left">
@@ -220,9 +210,7 @@ onUnmounted(() => {
             </div>
 
 
-            <!-- =====================================================
-                 WAYANG RIGHT
-                 ===================================================== -->
+            <!-- WAYANG RIGHT -->
 
             <div class="wayang wayang-right">
 
@@ -237,10 +225,9 @@ onUnmounted(() => {
 
             <!-- =====================================================
                  GOLD BOTTOM
-                 
-                 Z-INDEX 40
-                 
-                 MENUTUPI BAGIAN BAWAH WAYANG
+
+                 DITINGGIKAN SEDIKIT AGAR LEBIH BANYAK MENUTUPI
+                 BAGIAN BAWAH WAYANG.
                  ===================================================== -->
 
             <div class="bottom-gold">
@@ -252,6 +239,11 @@ onUnmounted(() => {
 
             <!-- =====================================================
                  BOTTOM TEXT
+
+                 PUTIH
+                 BERADA DI DALAM AREA GOLD
+
+                 POSISI DINAikKAN
                  ===================================================== -->
 
             <p class="bottom-text">
@@ -261,8 +253,6 @@ onUnmounted(() => {
 
             <!-- =====================================================
                  LUXURY FRAME
-                 
-                 PALING DEPAN
                  ===================================================== -->
 
             <div class="luxury-frame">
@@ -270,7 +260,6 @@ onUnmounted(() => {
                 <div class="frame-outer"></div>
 
                 <div class="frame-inner"></div>
-
 
                 <div class="frame-corner frame-corner-tl"></div>
 
@@ -282,7 +271,6 @@ onUnmounted(() => {
 
             </div>
 
-
         </div>
 
     </Transition>
@@ -292,23 +280,8 @@ onUnmounted(() => {
 
 <style scoped>
 /* ================================================================
-   ================================================================
    JAVANESE ROYAL LUXURY OPENING SCREEN
-   ================================================================
    ================================================================ */
-
-
-/*
-    COLOR PALETTE
-
-    Espresso       #241C16
-    Deep Brown     #30241B
-    Warm Brown     #49382A
-    Bronze         #9C7844
-    Champagne      #D6B15E
-    Light Gold     #F0D78A
-    Ivory          #F5EBDD
-*/
 
 
 /* ================================================================
@@ -331,8 +304,7 @@ onUnmounted(() => {
 
     overflow: hidden;
 
-    background:
-        #241c16;
+    background: #241c16;
 
     overscroll-behavior: none;
 
@@ -384,155 +356,7 @@ onUnmounted(() => {
 
 
 /* ================================================================
-   ORNAMENT
-   ================================================================
-
-   IMPORTANT:
-
-   z-index 1
-
-   Ornament berada DI BAWAH PHOTO.
-   ================================================================ */
-
-.ornament {
-
-    position: absolute;
-
-    z-index: 1;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    pointer-events: none;
-
-    transform-origin:
-        center center;
-
-}
-
-
-.ornament img {
-
-    display: block;
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: contain;
-
-    filter:
-        brightness(1.15) sepia(.25);
-
-}
-
-
-/* ================================================================
-   KAWUNG
-   ================================================================ */
-
-.ornament-kawung {
-
-    top: 50%;
-
-    left: 50%;
-
-    width:
-        min(90vw, 950px);
-
-    height:
-        min(90vw, 950px);
-
-    transform:
-        translate(-50%, -50%);
-
-    opacity: .055;
-
-    animation:
-        ornamentRotateClockwise 140s linear infinite;
-
-}
-
-
-/* ================================================================
-   PARANG
-   ================================================================ */
-
-.ornament-parang {
-
-    top: 50%;
-
-    left: 50%;
-
-    width:
-        min(120vw, 1250px);
-
-    height:
-        min(120vw, 1250px);
-
-    transform:
-        translate(-50%, -50%);
-
-    opacity: .025;
-
-    animation:
-        ornamentRotateCounter 190s linear infinite;
-
-}
-
-
-/* ================================================================
-   ORNAMENT ROTATION
-   ================================================================ */
-
-@keyframes ornamentRotateClockwise {
-
-    from {
-
-        transform:
-            translate(-50%, -50%) rotate(0deg);
-
-    }
-
-    to {
-
-        transform:
-            translate(-50%, -50%) rotate(360deg);
-
-    }
-
-}
-
-
-@keyframes ornamentRotateCounter {
-
-    from {
-
-        transform:
-            translate(-50%, -50%) rotate(360deg);
-
-    }
-
-    to {
-
-        transform:
-            translate(-50%, -50%) rotate(0deg);
-
-    }
-
-}
-
-
-/* ================================================================
-   PHOTO
-   ================================================================
-
-   z-index 2
-
-   PHOTO berada di atas ornament.
+   COVER PHOTO
    ================================================================ */
 
 .opening-photo {
@@ -546,17 +370,13 @@ onUnmounted(() => {
     background-image:
         url('/images/cover-mobile.jpg');
 
-    background-repeat:
-        no-repeat;
+    background-repeat: no-repeat;
 
-    background-position:
-        center top;
+    background-position: center top;
 
-    background-size:
-        cover;
+    background-size: cover;
 
-    transform:
-        scale(1.015);
+    transform: scale(1.015);
 
     filter:
         saturate(.72) contrast(.94) brightness(.88) sepia(.07);
@@ -623,6 +443,149 @@ onUnmounted(() => {
 
 
 /* ================================================================
+   ORNAMENT SYSTEM
+   ================================================================ */
+
+.ornament {
+
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+
+    bottom: -55%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    pointer-events: none;
+
+    transform-origin: center center;
+
+}
+
+
+/* ================================================================
+   ORNAMENT IMAGE
+   ================================================================ */
+
+.ornament img {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    /*
+     * HITAM -> PUTIH
+     *
+     * brightness(0)
+     * membuat semua menjadi hitam.
+     *
+     * invert(1)
+     * membalik hitam menjadi putih.
+     */
+
+    filter:
+        brightness(0) invert(1);
+
+}
+
+
+/* ================================================================
+   MAIN CIRCLE
+   ================================================================ */
+
+.ornament-kawung {
+
+    width: 115vw;
+
+    height: 115vw;
+
+    transform:
+        translateX(-50%);
+
+    opacity: .45;
+
+    animation:
+        ornamentRotateClockwise 140s linear infinite;
+
+}
+
+
+/* ================================================================
+   SECOND CIRCLE
+   ================================================================ */
+
+.ornament-parang {
+
+    bottom: -75%;
+
+    width: 145vw;
+
+    height: 145vw;
+
+    transform:
+        translateX(-50%);
+
+    opacity: .18;
+
+    animation:
+        ornamentRotateCounter 190s linear infinite;
+
+}
+
+
+/* ================================================================
+   ROTATION
+   ================================================================ */
+
+@keyframes ornamentRotateClockwise {
+
+    from {
+
+        transform:
+            translateX(-50%) rotate(0deg);
+
+    }
+
+    to {
+
+        transform:
+            translateX(-50%) rotate(360deg);
+
+    }
+
+}
+
+
+@keyframes ornamentRotateCounter {
+
+    from {
+
+        transform:
+            translateX(-50%) rotate(360deg);
+
+    }
+
+    to {
+
+        transform:
+            translateX(-50%) rotate(0deg);
+
+    }
+
+}
+
+
+/* ================================================================
    GOLD ATMOSPHERE
    ================================================================ */
 
@@ -630,11 +593,11 @@ onUnmounted(() => {
 
     position: absolute;
 
-    top: 50%;
+    top: 35%;
 
     left: 50%;
 
-    z-index: 5;
+    z-index: 15;
 
     width:
         min(80vw, 850px);
@@ -729,10 +692,6 @@ onUnmounted(() => {
 }
 
 
-/* ================================================================
-   GUNUNGAN HALO
-   ================================================================ */
-
 .gunungan-halo {
 
     position: absolute;
@@ -758,10 +717,6 @@ onUnmounted(() => {
 
 }
 
-
-/* ================================================================
-   GUNUNGAN INNER
-   ================================================================ */
 
 .gunungan-inner {
 
@@ -793,15 +748,10 @@ onUnmounted(() => {
     object-fit: contain;
 
     filter:
-
         drop-shadow(0 5px 10px rgba(0, 0, 0, .35));
 
 }
 
-
-/* ================================================================
-   GUNUNGAN ANIMATION
-   ================================================================ */
 
 @keyframes gununganAppear {
 
@@ -848,11 +798,6 @@ onUnmounted(() => {
 
 /* ================================================================
    WEDDING LABEL
-   ================================================================
-
-   Elsie Swash Caps
-
-   Tanpa ribbon.
    ================================================================ */
 
 .wedding-label {
@@ -886,8 +831,7 @@ onUnmounted(() => {
 
     line-height: 1.15;
 
-    letter-spacing:
-        .025em;
+    letter-spacing: .025em;
 
     text-align: center;
 
@@ -909,10 +853,6 @@ onUnmounted(() => {
 
 }
 
-
-/* ================================================================
-   WEDDING LABEL DECORATIVE LINES
-   ================================================================ */
 
 .wedding-label::before,
 .wedding-label::after {
@@ -964,10 +904,6 @@ onUnmounted(() => {
 }
 
 
-/* ================================================================
-   WEDDING LABEL ANIMATION
-   ================================================================ */
-
 @keyframes weddingLabelAppear {
 
     from {
@@ -1012,7 +948,6 @@ onUnmounted(() => {
         #E5C46F;
 
     font-family:
-
         Georgia,
         "Times New Roman",
         serif;
@@ -1026,8 +961,7 @@ onUnmounted(() => {
 
     line-height: .95;
 
-    letter-spacing:
-        -.025em;
+    letter-spacing: -.025em;
 
     white-space: nowrap;
 
@@ -1084,6 +1018,15 @@ onUnmounted(() => {
 
 }
 
+.guest-address {
+    margin: 4px 0 0;
+    color: rgba(238, 213, 165, .75);
+    font-size: 9px;
+    line-height: 1.3;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, .40);
+}
 
 .guest-label {
 
@@ -1111,7 +1054,6 @@ onUnmounted(() => {
         #F0D078;
 
     font-family:
-
         Georgia,
         "Times New Roman",
         serif;
@@ -1176,24 +1118,19 @@ onUnmounted(() => {
     border:
         1px solid #E8CC82;
 
-    border-radius:
-        999px;
+    border-radius: 999px;
 
     background:
 
         linear-gradient(135deg,
-
             #E6C873 0%,
-
             #D4B15D 42%,
-
             #C29A43 100%);
 
     color:
         #38281B;
 
     font-family:
-
         Georgia,
         "Times New Roman",
         serif;
@@ -1205,8 +1142,7 @@ onUnmounted(() => {
 
     font-weight: 700;
 
-    letter-spacing:
-        .02em;
+    letter-spacing: .02em;
 
     box-shadow:
 
@@ -1269,15 +1205,15 @@ onUnmounted(() => {
 
 /* ================================================================
    WAYANG
-   ================================================================
-
-   IMPORTANT:
-
-   z-index 35
-
-   Wayang berada:
-   - DI ATAS foto
-   - DI BAWAH gold bottom
+     
+   LAYER 35
+     
+   ORNAMENT = 10
+   CONTENT  = 30
+   WAYANG   = 35
+   GOLD     = 40
+   TEXT     = 60
+   FRAME    = 70
    ================================================================ */
 
 .wayang {
@@ -1296,31 +1232,22 @@ onUnmounted(() => {
     pointer-events: none;
 
     filter:
-
         drop-shadow(0 8px 12px rgba(0, 0, 0, .30));
 
 }
 
 
-/* ================================================================
-   WAYANG INNER
-   ================================================================ */
-
 .wayang-inner {
 
     width: 100%;
 
-    animation-duration:
-        7s;
+    animation-duration: 7s;
 
-    animation-timing-function:
-        ease-in-out;
+    animation-timing-function: ease-in-out;
 
-    animation-iteration-count:
-        infinite;
+    animation-iteration-count: infinite;
 
-    animation-delay:
-        1.6s;
+    animation-delay: 1.6s;
 
 }
 
@@ -1336,16 +1263,11 @@ onUnmounted(() => {
 }
 
 
-/* ================================================================
-   LEFT WAYANG
-   ================================================================ */
-
 .wayang-left {
 
     left: -20px;
 
     animation:
-
         wayangEnterLeft 1.5s cubic-bezier(.22, 1, .36, 1) both;
 
 }
@@ -1359,16 +1281,11 @@ onUnmounted(() => {
 }
 
 
-/* ================================================================
-   RIGHT WAYANG
-   ================================================================ */
-
 .wayang-right {
 
     right: -20px;
 
     animation:
-
         wayangEnterRight 1.5s cubic-bezier(.22, 1, .36, 1) both;
 
 }
@@ -1379,15 +1296,10 @@ onUnmounted(() => {
     animation-name:
         wayangFloatRight;
 
-    animation-duration:
-        8s;
+    animation-duration: 8s;
 
 }
 
-
-/* ================================================================
-   WAYANG ENTER
-   ================================================================ */
 
 @keyframes wayangEnterLeft {
 
@@ -1435,10 +1347,6 @@ onUnmounted(() => {
 }
 
 
-/* ================================================================
-   WAYANG FLOAT
-   ================================================================ */
-
 @keyframes wayangFloatLeft {
 
     0%,
@@ -1481,15 +1389,15 @@ onUnmounted(() => {
 
 /* ================================================================
    GOLD BOTTOM
-   ================================================================
-
-   IMPORTANT:
-
-   z-index 40
-
-   Lebih tinggi daripada wayang (35).
-
-   Jadi gold akan MENUTUPI bagian bawah wayang.
+     
+   LAYER 40
+     
+   DITINGGIKAN DARI VERSI SEBELUMNYA.
+     
+   Tujuannya:
+   - lebih banyak menutupi wayang
+   - area gold lebih terlihat
+   - teks putih punya area gold yang lebih luas
    ================================================================ */
 
 .bottom-gold {
@@ -1504,10 +1412,18 @@ onUnmounted(() => {
 
     bottom: -5%;
 
+    /*
+     * SEBELUMNYA:
+     * clamp(45px, 8vh, 90px)
+     *
+     * SEKARANG:
+     * sedikit lebih tinggi.
+     */
+
     height:
-        clamp(45px,
-            8vh,
-            90px);
+        clamp(60px,
+            10vh,
+            105px);
 
     background:
 
@@ -1557,6 +1473,14 @@ onUnmounted(() => {
 
 /* ================================================================
    BOTTOM TEXT
+     
+   LAYER 60
+     
+   PUTIH
+     
+   SEKARANG DINAikKAN.
+     
+   Tetap berada DI DALAM AREA GOLD.
    ================================================================ */
 
 .bottom-text {
@@ -1567,7 +1491,14 @@ onUnmounted(() => {
 
     left: 50%;
 
-    bottom: 7px;
+    /*
+     * DINAikKAN DARI 7px
+     *
+     * Semakin besar nilainya,
+     * semakin ke ATAS tulisan.
+     */
+
+    bottom: 35px;
 
     transform:
         translateX(-50%);
@@ -1579,40 +1510,39 @@ onUnmounted(() => {
     margin: 0;
 
     color:
-        rgba(83,
-            47,
-            18,
-            .72);
+        #FFFFFF;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size:
         clamp(7px,
             .65vw,
             9px);
 
+    font-weight: 500;
+
     letter-spacing:
         clamp(.12em,
             .22vw,
             .25em);
 
-    text-transform:
-        uppercase;
+    text-transform: uppercase;
 
-    text-align:
-        center;
+    text-align: center;
 
-    white-space:
-        nowrap;
+    white-space: nowrap;
+
+    text-shadow:
+        0 1px 3px rgba(70, 40, 10, .35);
 
 }
 
 
 /* ================================================================
    LUXURY FRAME
-   ================================================================
-
-   z-index 50
-
-   Frame berada di atas semuanya.
    ================================================================ */
 
 .luxury-frame {
@@ -1621,7 +1551,7 @@ onUnmounted(() => {
 
     inset: 0;
 
-    z-index: 50;
+    z-index: 70;
 
     pointer-events: none;
 
@@ -1687,8 +1617,7 @@ onUnmounted(() => {
             111,
             .42);
 
-    border-style:
-        solid;
+    border-style: solid;
 
     opacity: .75;
 
@@ -1797,6 +1726,9 @@ onUnmounted(() => {
 
 @media (orientation: portrait) {
 
+
+    /* COVER */
+
     .opening-photo {
 
         background-image:
@@ -1807,6 +1739,8 @@ onUnmounted(() => {
 
     }
 
+
+    /* OVERLAY */
 
     .opening-overlay {
 
@@ -1827,31 +1761,37 @@ onUnmounted(() => {
     }
 
 
-    /* Ornament */
+    /* ============================================================
+       ORNAMENT MOBILE
+       ============================================================ */
 
     .ornament-kawung {
 
-        width: 115vw;
+        bottom: -53%;
 
-        height: 115vw;
+        width: 135vw;
 
-        opacity: .045;
+        height: 135vw;
+
+        opacity: .040;
 
     }
 
 
     .ornament-parang {
 
-        width: 145vw;
+        bottom: -72%;
 
-        height: 145vw;
+        width: 165vw;
 
-        opacity: .022;
+        height: 165vw;
+
+        opacity: .015;
 
     }
 
 
-    /* Content */
+    /* CONTENT */
 
     .opening-content {
 
@@ -1861,7 +1801,7 @@ onUnmounted(() => {
     }
 
 
-    /* Gunungan */
+    /* GUNUNGAN */
 
     .gunungan-wrapper {
 
@@ -1880,7 +1820,7 @@ onUnmounted(() => {
     }
 
 
-    /* Wedding label */
+    /* WEDDING LABEL */
 
     .wedding-label {
 
@@ -1889,8 +1829,7 @@ onUnmounted(() => {
                 5vw,
                 24px);
 
-        letter-spacing:
-            .015em;
+        letter-spacing: .015em;
 
         margin-top: 8px;
 
@@ -1913,7 +1852,7 @@ onUnmounted(() => {
     }
 
 
-    /* Names */
+    /* NAMES */
 
     .couple-names {
 
@@ -1925,7 +1864,7 @@ onUnmounted(() => {
     }
 
 
-    /* Guest */
+    /* GUEST */
 
     .guest-section {
 
@@ -1941,7 +1880,7 @@ onUnmounted(() => {
     }
 
 
-    /* Wayang */
+    /* WAYANG */
 
     .wayang {
 
@@ -1969,20 +1908,30 @@ onUnmounted(() => {
     }
 
 
-    /* Gold */
+    /* ============================================================
+       GOLD MOBILE
+       
+       DITINGGIKAN
+       ============================================================ */
 
     .bottom-gold {
 
-        height: 55px;
+        height: 68px;
 
     }
 
 
-    /* Bottom text */
+    /* ============================================================
+       TEXT MOBILE
+       
+       DINAikKAN
+       ============================================================ */
 
     .bottom-text {
 
-        bottom: 6px;
+        bottom: 42px;
+
+        color: #FFFFFF;
 
         font-size: 6.5px;
 
@@ -1998,7 +1947,6 @@ onUnmounted(() => {
    ================================================================ */
 
 @media (orientation: portrait) and (max-height: 700px) {
-
 
     .opening-content {
 
@@ -2044,8 +1992,7 @@ onUnmounted(() => {
 
         margin-top: 5px;
 
-        font-size:
-            2.25rem;
+        font-size: 2.25rem;
 
     }
 
@@ -2090,9 +2037,20 @@ onUnmounted(() => {
     }
 
 
+    /* GOLD DITINGGIKAN */
+
     .bottom-gold {
 
-        height: 48px;
+        height: 60px;
+
+    }
+
+
+    /* TEXT DINAikKAN */
+
+    .bottom-text {
+
+        bottom: 35px;
 
     }
 
@@ -2149,9 +2107,9 @@ onUnmounted(() => {
 
     .frame-corner-br {
 
-        right: 17px;
-
         bottom: 17px;
+
+        right: 17px;
 
     }
 
@@ -2163,7 +2121,6 @@ onUnmounted(() => {
    ================================================================ */
 
 @media (orientation: portrait) and (max-height: 620px) {
-
 
     .opening-content {
 
@@ -2187,16 +2144,14 @@ onUnmounted(() => {
 
     .wedding-label {
 
-        font-size:
-            15px;
+        font-size: 15px;
 
     }
 
 
     .couple-names {
 
-        font-size:
-            2rem;
+        font-size: 2rem;
 
     }
 
@@ -2263,9 +2218,22 @@ onUnmounted(() => {
     }
 
 
+    /* GOLD */
+
     .bottom-gold {
 
-        height: 44px;
+        height: 56px;
+
+    }
+
+
+    /* TEXT */
+
+    .bottom-text {
+
+        bottom: 33px;
+
+        color: #FFFFFF;
 
     }
 
@@ -2279,6 +2247,8 @@ onUnmounted(() => {
 @media (orientation: landscape) {
 
 
+    /* COVER DESKTOP */
+
     .opening-photo {
 
         background-image:
@@ -2290,6 +2260,8 @@ onUnmounted(() => {
     }
 
 
+    /* CONTENT */
+
     .opening-content {
 
         padding:
@@ -2297,6 +2269,36 @@ onUnmounted(() => {
 
     }
 
+
+    /* ORNAMENT */
+
+    .ornament-kawung {
+
+        bottom: -70%;
+
+        width: 125vh;
+
+        height: 125vh;
+
+        opacity: .045;
+
+    }
+
+
+    .ornament-parang {
+
+        bottom: -90%;
+
+        width: 155vh;
+
+        height: 155vh;
+
+        opacity: .018;
+
+    }
+
+
+    /* GUNUNGAN */
 
     .gunungan-wrapper {
 
@@ -2315,6 +2317,8 @@ onUnmounted(() => {
     }
 
 
+    /* LABEL */
+
     .wedding-label {
 
         font-size:
@@ -2325,6 +2329,8 @@ onUnmounted(() => {
     }
 
 
+    /* NAMES */
+
     .couple-names {
 
         font-size:
@@ -2334,6 +2340,8 @@ onUnmounted(() => {
 
     }
 
+
+    /* GUEST */
 
     .guest-section {
 
@@ -2349,12 +2357,16 @@ onUnmounted(() => {
     }
 
 
+    /* BUTTON */
+
     .opening-button {
 
         margin-top: 14px;
 
     }
 
+
+    /* WAYANG */
 
     .wayang {
 
@@ -2366,24 +2378,27 @@ onUnmounted(() => {
     }
 
 
-    .ornament-kawung {
+    /* ============================================================
+       GOLD LANDSCAPE
+       ============================================================ */
 
-        width:
-            min(100vh, 900px);
+    .bottom-gold {
 
         height:
-            min(100vh, 900px);
+            clamp(65px,
+                11vh,
+                110px);
 
     }
 
 
-    .ornament-parang {
+    /* ============================================================
+       TEXT LANDSCAPE
+       ============================================================ */
 
-        width:
-            min(130vh, 1200px);
+    .bottom-text {
 
-        height:
-            min(130vh, 1200px);
+        bottom: 50px;
 
     }
 
@@ -2396,12 +2411,37 @@ onUnmounted(() => {
 
 @media (orientation: landscape) and (max-height: 600px) {
 
-
     .opening-content {
 
         padding-top: 1vh;
 
         padding-bottom: 9vh;
+
+    }
+
+
+    .ornament-kawung {
+
+        bottom: -82%;
+
+        width: 140vh;
+
+        height: 140vh;
+
+        opacity: .040;
+
+    }
+
+
+    .ornament-parang {
+
+        bottom: -105%;
+
+        width: 175vh;
+
+        height: 175vh;
+
+        opacity: .015;
 
     }
 
@@ -2498,9 +2538,22 @@ onUnmounted(() => {
     }
 
 
+    /* GOLD LEBIH TINGGI */
+
     .bottom-gold {
 
-        height: 45px;
+        height: 58px;
+
+    }
+
+
+    /* TEXT NAIK */
+
+    .bottom-text {
+
+        bottom: 35px;
+
+        color: #FFFFFF;
 
     }
 
@@ -2512,7 +2565,6 @@ onUnmounted(() => {
    ================================================================ */
 
 @media (orientation: landscape) and (min-width: 768px) {
-
 
     .opening-content {
 
@@ -2545,7 +2597,6 @@ onUnmounted(() => {
 
 @media (orientation: landscape) and (min-width: 1200px) {
 
-
     .opening-content {
 
         padding-bottom: 12vh;
@@ -2577,16 +2628,49 @@ onUnmounted(() => {
     }
 
 
+    /*
+     * PENTING:
+     * Sebelumnya opacity:
+     *
+     * 1.555
+     * 1.422
+     *
+     * Itu terlalu kuat.
+     *
+     * Dikembalikan menjadi samar.
+     */
+
     .ornament-kawung {
 
-        opacity: .055;
+        opacity: .045;
 
     }
 
 
     .ornament-parang {
 
-        opacity: .028;
+        opacity: .018;
+
+    }
+
+
+    /* GOLD DESKTOP DITINGGIKAN */
+
+    .bottom-gold {
+
+        height:
+            clamp(75px,
+                10vh,
+                110px);
+
+    }
+
+
+    /* TEXT DESKTOP */
+
+    .bottom-text {
+
+        bottom: 54px;
 
     }
 
@@ -2598,7 +2682,6 @@ onUnmounted(() => {
    ================================================================ */
 
 @media (orientation: landscape) and (min-width: 1600px) {
-
 
     .wayang {
 
@@ -2613,6 +2696,20 @@ onUnmounted(() => {
 
     }
 
+
+    .bottom-gold {
+
+        height: 100px;
+
+    }
+
+
+    .bottom-text {
+
+        bottom: 56px;
+
+    }
+
 }
 
 
@@ -2621,7 +2718,6 @@ onUnmounted(() => {
    ================================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-
 
     .gunungan-inner,
     .wayang-inner,
