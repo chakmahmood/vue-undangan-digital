@@ -5,42 +5,8 @@ const props = defineProps<{
     invitation: any
 }>()
 
-
-const calendarUrl = computed(() => {
-
-    const wedding = props.invitation.wedding
-    const calendar = wedding.calendar
-
-    const title =
-        `The Wedding of ${props.invitation.groom.name} & ${props.invitation.bride.name}`
-
-
-    const details =
-        `${title}<br>` +
-        `${wedding.day}, ${wedding.date} ` +
-        `Pukul ${wedding.time}<br>` +
-        `${wedding.address}`
-
-
-    const params = new URLSearchParams({
-        action: 'TEMPLATE',
-
-        text: title,
-
-        details: details,
-
-        dates:
-            `${calendar.start}/${calendar.end}`,
-
-        location:
-            `${wedding.venue}, ${wedding.address}`,
-
-        ctz:
-            calendar.timezone,
-    })
-
-
-    return `https://www.google.com/calendar/render?${params.toString()}`
+const coupleNames = computed(() => {
+    return `${props.invitation.groom.name} & ${props.invitation.bride.name}`
 })
 </script>
 
@@ -57,7 +23,7 @@ const calendarUrl = computed(() => {
             <source media="(orientation: landscape)" srcset="/images/cover-desktop.jpg" />
 
             <!-- Portrait / Mobile -->
-            <img src="/images/cover-mobile.jpg" alt="Diyan & Hadi Wedding" class="hero-image" />
+            <img src="/images/cover-mobile.jpg" :alt="`${coupleNames} Wedding`" class="hero-image" />
 
         </picture>
 
@@ -90,11 +56,20 @@ const calendarUrl = computed(() => {
 
 
         <!-- =====================================================
-             CONTENT
+             HERO CONTENT
+
+             FOKUS:
+             - Wedding title
+             - Couple names
+             - Wedding date
+
+             TIDAK ADA:
+             - Venue
+             - Address
+             - Save to Calendar
              ===================================================== -->
 
         <div class="hero-content">
-
 
             <!-- Wedding title -->
 
@@ -103,7 +78,7 @@ const calendarUrl = computed(() => {
             </p>
 
 
-            <!-- Decorative line -->
+            <!-- Decorative divider -->
 
             <div class="hero-divider">
 
@@ -116,60 +91,33 @@ const calendarUrl = computed(() => {
             </div>
 
 
-            <!-- Couple -->
+            <!-- =================================================
+                 COUPLE NAMES
+                 ================================================= -->
 
             <h1 class="hero-names">
 
-                <span>
+                <span class="hero-name">
                     {{ invitation.groom.name }}
                 </span>
 
                 <em>&amp;</em>
 
-                <span>
+                <span class="hero-name">
                     {{ invitation.bride.name }}
                 </span>
 
             </h1>
 
 
-            <!-- Date -->
+            <!-- =================================================
+                 WEDDING DATE
+                 ================================================= -->
 
             <p class="hero-date">
                 {{ invitation.wedding.date }}
             </p>
 
-
-            <!-- Venue -->
-
-            <p class="hero-venue">
-                {{ invitation.wedding.venue }}
-            </p>
-
-            <a :href="calendarUrl" target="_blank" rel="noopener noreferrer" class="calendar-button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon">
-                    <rect x="3" y="4" width="18" height="17" rx="2" />
-
-                    <line x1="16" y1="2" x2="16" y2="6" />
-
-                    <line x1="8" y1="2" x2="8" y2="6" />
-
-                    <line x1="3" y1="10" x2="21" y2="10" />
-
-                    <path d="M8 14h2" />
-
-                    <path d="M14 14h2" />
-
-                    <path d="M8 18h2" />
-
-                    <path d="M14 18h2" />
-                </svg>
-
-                <span>
-                    SAVE TO CALENDAR
-                </span>
-            </a>
         </div>
 
 
@@ -182,7 +130,7 @@ const calendarUrl = computed(() => {
             <span class="hero-scroll-line"></span>
 
             <span class="hero-scroll-text">
-                SCROLL
+
             </span>
 
         </div>
@@ -206,223 +154,6 @@ const calendarUrl = computed(() => {
 /* ================================================================
    HERO
    ================================================================ */
-/* ================================================================
-   SAVE TO CALENDAR
-   ================================================================ */
-
-.calendar-button {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 9px;
-
-    margin-top: 20px;
-
-    min-width: 185px;
-
-    padding:
-        10px 21px;
-
-    border:
-        1px solid rgba(232,
-            204,
-            130,
-            .70);
-
-    border-radius:
-        999px;
-
-    background:
-        rgba(35,
-            25,
-            17,
-            .34);
-
-    color:
-        #EED58F;
-
-    backdrop-filter:
-        blur(8px);
-
-    -webkit-backdrop-filter:
-        blur(8px);
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size:
-        clamp(9px,
-            .75vw,
-            11px);
-
-    font-weight:
-        600;
-
-    letter-spacing:
-        .16em;
-
-    text-decoration:
-        none;
-
-    white-space:
-        nowrap;
-
-    box-shadow:
-
-        0 6px 18px rgba(0,
-            0,
-            0,
-            .20),
-
-        inset 0 1px 0 rgba(255,
-            255,
-            255,
-            .08);
-
-    transition:
-
-        transform .3s ease,
-
-        background .3s ease,
-
-        border-color .3s ease,
-
-        box-shadow .3s ease;
-
-    animation:
-
-        heroContentIn 1s .7s cubic-bezier(.22, 1, .36, 1) both;
-
-}
-
-
-.calendar-button:hover {
-
-    transform:
-        translateY(-2px);
-
-    background:
-        rgba(232,
-            204,
-            130,
-            .14);
-
-    border-color:
-        #E8CC82;
-
-    box-shadow:
-
-        0 10px 25px rgba(0,
-            0,
-            0,
-            .28),
-
-        0 0 18px rgba(232,
-            204,
-            130,
-            .08);
-
-}
-
-
-.calendar-button:active {
-
-    transform:
-        scale(.97);
-
-}
-
-
-.calendar-icon {
-
-    width: 15px;
-
-    height: 15px;
-
-    flex-shrink: 0;
-
-}
-
-
-/* ================================================================
-   MOBILE
-   ================================================================ */
-
-@media (orientation: portrait) {
-
-    .calendar-button {
-
-        margin-top:
-            17px;
-
-        min-width:
-            175px;
-
-        padding:
-            9px 19px;
-
-        font-size:
-            9px;
-
-        letter-spacing:
-            .13em;
-
-    }
-
-
-    .calendar-icon {
-
-        width: 14px;
-
-        height: 14px;
-
-    }
-
-}
-
-
-/* ================================================================
-   SHORT MOBILE
-   ================================================================ */
-
-@media (orientation: portrait) and (max-height: 700px) {
-
-    .calendar-button {
-
-        margin-top:
-            13px;
-
-    }
-
-}
-
-
-/* ================================================================
-   SHORT LANDSCAPE
-   ================================================================ */
-
-@media (orientation: landscape) and (max-height: 600px) {
-
-    .calendar-button {
-
-        margin-top:
-            10px;
-
-        padding:
-            7px 17px;
-
-        font-size:
-            9px;
-
-    }
-
-}
 
 .hero-section {
 
@@ -558,7 +289,8 @@ const calendarUrl = computed(() => {
     transform:
         translate(-50%, -50%);
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
 
@@ -573,7 +305,8 @@ const calendarUrl = computed(() => {
     filter:
         blur(35px);
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
 }
 
@@ -594,27 +327,35 @@ const calendarUrl = computed(() => {
     height:
         min(45vw, 500px);
 
-    opacity: .045;
+    opacity:
+        .045;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
 }
 
 
 .hero-ornament img {
 
-    display: block;
+    display:
+        block;
 
-    width: 100%;
+    width:
+        100%;
 
-    height: 100%;
+    height:
+        100%;
 
-    object-fit: contain;
+    object-fit:
+        contain;
 
 }
 
 
-/* LEFT */
+/* ================================================================
+   LEFT ORNAMENT
+   ================================================================ */
 
 .hero-ornament-left {
 
@@ -630,7 +371,9 @@ const calendarUrl = computed(() => {
 }
 
 
-/* RIGHT */
+/* ================================================================
+   RIGHT ORNAMENT
+   ================================================================ */
 
 .hero-ornament-right {
 
@@ -647,7 +390,9 @@ const calendarUrl = computed(() => {
 
 
 /* ================================================================
-   CONTENT
+   HERO CONTENT
+
+   FOKUS UTAMA PENGANTIN
    ================================================================ */
 
 .hero-content {
@@ -656,35 +401,41 @@ const calendarUrl = computed(() => {
 
     z-index: 10;
 
-    min-height: 100svh;
+    min-height:
+        100svh;
 
-    display: flex;
+    display:
+        flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: flex-end;
+    justify-content:
+        flex-end;
 
-    text-align: center;
+    text-align:
+        center;
 
     padding:
-        10vh 24px clamp(100px,
-            13vh,
-            150px);
+        10vh 24px clamp(125px, 17vh, 185px);
 
-    color: white;
+    color:
+        white;
 
 }
 
 
 /* ================================================================
-   LABEL
+   WEDDING LABEL
    ================================================================ */
 
 .hero-label {
 
-    margin: 0;
+    margin:
+        0;
 
     color:
         #E8CC82;
@@ -699,19 +450,19 @@ const calendarUrl = computed(() => {
             2.4vw,
             34px);
 
-    font-weight: 400;
+    font-weight:
+        400;
 
-    line-height: 1.1;
+    line-height:
+        1.1;
 
     letter-spacing:
         .02em;
 
     text-shadow:
-
         0 3px 10px rgba(0, 0, 0, .45);
 
     animation:
-
         heroContentIn 1s .15s cubic-bezier(.22, 1, .36, 1) both;
 
 }
@@ -723,13 +474,17 @@ const calendarUrl = computed(() => {
 
 .hero-divider {
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    gap: 9px;
+    gap:
+        9px;
 
     margin-top:
         18px;
@@ -744,7 +499,8 @@ const calendarUrl = computed(() => {
             5vw,
             70px);
 
-    height: 1px;
+    height:
+        1px;
 
     background:
 
@@ -768,11 +524,14 @@ const calendarUrl = computed(() => {
 
 .hero-divider i {
 
-    width: 5px;
+    width:
+        5px;
 
-    height: 5px;
+    height:
+        5px;
 
-    display: block;
+    display:
+        block;
 
     border:
         1px solid #E8CC82;
@@ -784,46 +543,52 @@ const calendarUrl = computed(() => {
 
 
 /* ================================================================
-   NAMES
+   COUPLE NAMES
+
+   INI BAGIAN UTAMA HERO
    ================================================================ */
 
 .hero-names {
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: baseline;
+    align-items:
+        baseline;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    flex-wrap: wrap;
+    flex-wrap:
+        wrap;
 
-    gap: .15em;
+    gap:
+        .15em;
 
     margin:
-        18px 0 0;
+        20px 0 0;
 
     color:
         #F1D78D;
 
     font-family:
-
         Georgia,
         "Times New Roman",
         serif;
 
     font-size:
-        clamp(3.5rem,
-            8vw,
-            8rem);
+        clamp(4rem,
+            9vw,
+            9rem);
 
     font-weight:
         500;
 
     line-height:
-        .9;
+        .88;
 
     letter-spacing:
-        -.035em;
+        -.045em;
 
     text-shadow:
 
@@ -832,8 +597,15 @@ const calendarUrl = computed(() => {
         0 0 30px rgba(226, 190, 102, .08);
 
     animation:
-
         heroContentIn 1s .3s cubic-bezier(.22, 1, .36, 1) both;
+
+}
+
+
+.hero-name {
+
+    display:
+        inline-block;
 
 }
 
@@ -841,7 +613,7 @@ const calendarUrl = computed(() => {
 .hero-names em {
 
     font-size:
-        .55em;
+        .52em;
 
     font-weight:
         400;
@@ -857,12 +629,14 @@ const calendarUrl = computed(() => {
 
 /* ================================================================
    DATE
+
+   HANYA INFORMASI TAMBAHAN UTAMA
    ================================================================ */
 
 .hero-date {
 
     margin:
-        26px 0 0;
+        28px 0 0;
 
     color:
         #F1E4C5;
@@ -886,41 +660,7 @@ const calendarUrl = computed(() => {
         0 2px 8px rgba(0, 0, 0, .45);
 
     animation:
-
         heroContentIn 1s .45s cubic-bezier(.22, 1, .36, 1) both;
-
-}
-
-
-/* ================================================================
-   VENUE
-   ================================================================ */
-
-.hero-venue {
-
-    margin:
-        9px 0 0;
-
-    color:
-        rgba(245,
-            235,
-            214,
-            .76);
-
-    font-size:
-        clamp(10px,
-            .85vw,
-            13px);
-
-    letter-spacing:
-        .14em;
-
-    text-transform:
-        uppercase;
-
-    animation:
-
-        heroContentIn 1s .55s cubic-bezier(.22, 1, .36, 1) both;
 
 }
 
@@ -933,7 +673,8 @@ const calendarUrl = computed(() => {
 
     from {
 
-        opacity: 0;
+        opacity:
+            0;
 
         transform:
             translateY(25px);
@@ -942,7 +683,8 @@ const calendarUrl = computed(() => {
 
     to {
 
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             translateY(0);
@@ -958,39 +700,46 @@ const calendarUrl = computed(() => {
 
 .hero-scroll {
 
-    position: absolute;
+    position:
+        absolute;
 
-    z-index: 20;
+    z-index:
+        20;
 
-    left: 50%;
+    left:
+        50%;
 
-    bottom: 28px;
+    bottom:
+        28px;
 
     transform:
         translateX(-50%);
 
-    display: flex;
+    display:
+        flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    align-items: center;
+    align-items:
+        center;
 
-    gap: 7px;
+    gap:
+        7px;
 
     color:
-        rgba(239,
-            219,
-            171,
-            .72);
+        rgba(239, 219, 171, .72);
 
 }
 
 
 .hero-scroll-line {
 
-    width: 1px;
+    width:
+        1px;
 
-    height: 28px;
+    height:
+        28px;
 
     background:
 
@@ -999,7 +748,6 @@ const calendarUrl = computed(() => {
             #E8CC82);
 
     animation:
-
         scrollLine 2s ease-in-out infinite;
 
 }
@@ -1021,7 +769,8 @@ const calendarUrl = computed(() => {
     0%,
     100% {
 
-        opacity: .35;
+        opacity:
+            .35;
 
         transform:
             scaleY(.65);
@@ -1033,7 +782,8 @@ const calendarUrl = computed(() => {
 
     50% {
 
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             scaleY(1);
@@ -1052,49 +802,54 @@ const calendarUrl = computed(() => {
 
 .hero-frame {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
 
-    z-index: 30;
+    z-index:
+        30;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
 }
 
 
 .hero-frame::before {
 
-    content: "";
+    content:
+        "";
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 12px;
+    inset:
+        12px;
 
     border:
-        1px solid rgba(225,
-            192,
-            112,
-            .30);
+        1px solid rgba(225, 192, 112, .30);
 
-    border-radius: 18px;
+    border-radius:
+        18px;
 
 }
 
 
 .hero-frame-inner {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 20px;
+    inset:
+        20px;
 
     border:
-        1px solid rgba(225,
-            192,
-            112,
-            .10);
+        1px solid rgba(225, 192, 112, .10);
 
-    border-radius: 15px;
+    border-radius:
+        15px;
 
 }
 
@@ -1122,7 +877,7 @@ const calendarUrl = computed(() => {
             18px;
 
         padding-bottom:
-            105px;
+            115px;
 
     }
 
@@ -1140,7 +895,7 @@ const calendarUrl = computed(() => {
     .hero-names {
 
         font-size:
-            clamp(3rem,
+            clamp(3.2rem,
                 13vw,
                 5rem);
 
@@ -1150,7 +905,8 @@ const calendarUrl = computed(() => {
         align-items:
             center;
 
-        gap: 0;
+        gap:
+            0;
 
     }
 
@@ -1166,24 +922,13 @@ const calendarUrl = computed(() => {
     .hero-date {
 
         margin-top:
-            20px;
+            22px;
 
         font-size:
             11px;
 
         letter-spacing:
             .18em;
-
-    }
-
-
-    .hero-venue {
-
-        font-size:
-            8px;
-
-        letter-spacing:
-            .12em;
 
     }
 
@@ -1232,7 +977,7 @@ const calendarUrl = computed(() => {
     .hero-content {
 
         padding-bottom:
-            90px;
+            95px;
 
     }
 
@@ -1259,7 +1004,7 @@ const calendarUrl = computed(() => {
             12px;
 
         font-size:
-            2.8rem;
+            2.9rem;
 
     }
 
@@ -1267,7 +1012,7 @@ const calendarUrl = computed(() => {
     .hero-date {
 
         margin-top:
-            15px;
+            16px;
 
     }
 
@@ -1299,9 +1044,9 @@ const calendarUrl = computed(() => {
     .hero-content {
 
         padding-bottom:
-            clamp(70px,
-                11vh,
-                120px);
+            clamp(80px,
+                12vh,
+                135px);
 
     }
 
@@ -1337,7 +1082,7 @@ const calendarUrl = computed(() => {
     .hero-content {
 
         padding-bottom:
-            65px;
+            70px;
 
     }
 
@@ -1382,17 +1127,6 @@ const calendarUrl = computed(() => {
     }
 
 
-    .hero-venue {
-
-        margin-top:
-            5px;
-
-        font-size:
-            8px;
-
-    }
-
-
     .hero-scroll {
 
         bottom:
@@ -1420,7 +1154,8 @@ const calendarUrl = computed(() => {
     .hero-image,
     .hero-scroll-line {
 
-        animation: none;
+        animation:
+            none;
 
     }
 

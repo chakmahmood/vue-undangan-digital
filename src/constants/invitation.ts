@@ -1,32 +1,33 @@
 export const invitation = {
   groom: {
-    name: "Diyan",
-    fullName: "Diyan Pratama",
-    instagram: "@diyanpratama",
+    name: "Hadi",
+    fullName: "Hadi Rahmat Prasojo",
+    instagram: "@hadirahmatprasojo",
   },
 
   bride: {
-    name: "Hadi",
-    fullName: "Hadi Permata",
-    instagram: "@hadipermata",
+    name: "Diyan",
+    fullName: "Diyan Lestari",
+    instagram: "@diyanlestari",
   },
 
   wedding: {
     title: "The Wedding Reception Of",
 
-    date: "20 September 2026",
+    date: "27 Agustus 2026",
 
-    day: "Minggu",
+    day: "Kamis",
 
-    time: "10.00 WIB - Selesai",
+    time: "08.00 WIB - Selesai",
 
-    venue: "Gedung Serbaguna",
+    venue: "Kediaman Mempelai Pria",
 
-    address: "Jl. Contoh No. 123, Surabaya",
+    address:
+      "Dusun Sidoharjo Desa Sumber Suko Jaya \n Kec. Belitang Kab. Ogan Komering Ulu Timur, Prov. Sumatra Selatan",
 
     calendar: {
-      start: "20260920T100000",
-      end: "20260920T140000",
+      start: "20260827T080000",
+      end: "20260827T140000",
       timezone: "Asia/Jakarta",
     },
   },

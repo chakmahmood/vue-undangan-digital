@@ -3,7 +3,7 @@ import OpeningScreen from '../components/invitation/OpeningScreen.vue'
 import HeroSection from '../components/invitation/HeroSection.vue'
 import CoupleSection from '../components/invitation/CoupleSection.vue'
 import EventSection from '../components/invitation/EventSection.vue'
-// import CountdownSection from '../components/invitation/CountdownSection.vue'
+import CountdownSection from '../components/invitation/CountdownSection.vue'
 // import GallerySection from '../components/invitation/GallerySection.vue'
 // import StorySection from '../components/invitation/StorySection.vue'
 // import RSVPSection from '../components/invitation/RSVPSection.vue'
@@ -24,7 +24,7 @@ import { invitation } from '../constants/invitation'
 
         <EventSection :invitation="invitation" />
 
-        <CountdownSection />
+        <CountdownSection :invitation="invitation" />
 
         <GallerySection :images="invitation.gallery" />
 
