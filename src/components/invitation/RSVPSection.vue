@@ -1,42 +1,247 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
-const name = ref('')
-const attendance = ref<'hadir' | 'tidak_hadir'>('hadir')
-const guests = ref(1)
+import {
+    computed,
+    ref,
+} from 'vue'
 
-const submitted = ref(false)
+import {
+    confirmAttendance,
+    type AttendanceStatus,
+} from '../../services/guestService'
 
-const submitRsvp = () => {
 
-    if (!name.value.trim()) {
+/* ================================================================
+   PROPS
+   ================================================================ */
+
+const props = defineProps<{
+    invitation: any
+}>()
+
+
+/* ================================================================
+   FORM STATE
+   ================================================================ */
+
+const attendance =
+    ref<AttendanceStatus>('hadir')
+
+
+const guests =
+    ref(1)
+
+
+const submitted =
+    ref(false)
+
+
+const submitting =
+    ref(false)
+
+
+const error =
+    ref<string | null>(null)
+
+
+/* ================================================================
+   GUEST DATA
+   ================================================================ */
+
+const uniqueCode = computed(() => {
+
+    return props.invitation?.guest?.unique_code || ''
+
+})
+
+
+const guestName = computed(() => {
+
+    return (
+        props.invitation?.guest?.nama_undangan ||
+        'Tamu Undangan'
+    )
+
+})
+
+
+/* ================================================================
+   SUBMIT RSVP
+   ================================================================ */
+
+async function submitRsvp() {
+
+    /*
+     * Pastikan unique code tersedia
+     */
+
+    if (!uniqueCode.value) {
+
+        error.value =
+            'Kode undangan tidak ditemukan.'
+
         return
+
     }
 
-    submitted.value = true
 
-    // TODO:
-    // Hubungkan ke API Laravel di sini.
-    //
-    // Contoh:
-    //
-    // await fetch('/api/rsvp', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //         name: name.value,
-    //         attendance: attendance.value,
-    //         guests: attendance.value === 'hadir'
-    //             ? guests.value
-    //             : 0
-    //     })
-    // })
+    /*
+     * Reset error
+     */
+
+    error.value = null
+
+
+    /*
+     * Loading
+     */
+
+    submitting.value = true
+
+
+    try {
+
+        /*
+         * Kalau tidak hadir,
+         * jumlah tamu selalu 0.
+         */
+
+        const guestCount =
+            attendance.value === 'hadir'
+                ? guests.value
+                : 0
+
+
+        /*
+         * Request API Laravel
+         */
+
+        const response =
+            await confirmAttendance(
+                uniqueCode.value,
+                {
+                    attendance_status:
+                        attendance.value,
+
+                    guest_count:
+                        guestCount,
+                },
+            )
+
+
+        /*
+         * Validasi response
+         */
+
+        if (
+            response.status !==
+            'success'
+        ) {
+
+            throw new Error(
+                response.message ||
+                'Konfirmasi gagal.',
+            )
+
+        }
+
+
+        /*
+         * Update data guest lokal
+         *
+         * Supaya kalau component lain membaca
+         * invitation.guest, datanya ikut berubah.
+         */
+
+        if (
+            props.invitation?.guest
+        ) {
+
+            props.invitation.guest
+                .attendance_status =
+                attendance.value
+
+
+            props.invitation.guest
+                .guest_count =
+                guestCount
+
+        }
+
+
+        /*
+         * Success
+         */
+
+        submitted.value = true
+
+
+    } catch (err: any) {
+
+        console.error(
+            '[RSVP]',
+            err,
+        )
+
+
+        /*
+         * Laravel validation error
+         */
+
+        const validationErrors =
+            err?.response?.data?.errors
+
+
+        if (
+            validationErrors
+        ) {
+
+            const firstError =
+                Object.values(
+                    validationErrors,
+                )[0] as string[]
+
+
+            error.value =
+                firstError?.[0] ||
+                'Data yang dikirim tidak valid.'
+
+        } else {
+
+            error.value =
+                err?.response?.data?.message ||
+                err?.message ||
+                'Gagal mengirim konfirmasi.'
+
+        }
+
+
+    } finally {
+
+        submitting.value = false
+
+    }
+
 }
+
+
+/* ================================================================
+   RESET
+   ================================================================ */
+
+function resetForm() {
+
+    submitted.value = false
+
+    error.value = null
+
+}
+
 </script>
 
+
 <template>
+
     <section class="rsvp-section">
 
         <!-- =====================================================
@@ -44,11 +249,16 @@ const submitRsvp = () => {
              ===================================================== -->
 
         <div class="rsvp-ornament rsvp-ornament-left">
+
             <img src="/images/circle-ornament.png" alt="" />
+
         </div>
 
+
         <div class="rsvp-ornament rsvp-ornament-right">
+
             <img src="/images/circle-ornament.png" alt="" />
+
         </div>
 
 
@@ -75,6 +285,7 @@ const submitRsvp = () => {
                     Konfirmasi Kehadiran
                 </p>
 
+
                 <div class="rsvp-divider">
 
                     <span></span>
@@ -85,14 +296,25 @@ const submitRsvp = () => {
 
                 </div>
 
+
                 <h2 class="rsvp-title">
+
                     Kehadiran Anda
-                    <em>Sangat Berarti</em>
+
+                    <em>
+                        Sangat Berarti
+                    </em>
+
                 </h2>
 
+
                 <p class="rsvp-description">
-                    Mohon konfirmasikan kehadiran Bapak/Ibu/Saudara/i
-                    agar kami dapat mempersiapkan acara dengan sebaik-baiknya.
+
+                    Mohon konfirmasikan kehadiran
+                    Bapak/Ibu/Saudara/i agar kami
+                    dapat mempersiapkan acara
+                    dengan sebaik-baiknya.
+
                 </p>
 
             </header>
@@ -107,8 +329,11 @@ const submitRsvp = () => {
                 <!-- Decorative corners -->
 
                 <span class="rsvp-corner rsvp-corner-tl"></span>
+
                 <span class="rsvp-corner rsvp-corner-tr"></span>
+
                 <span class="rsvp-corner rsvp-corner-bl"></span>
+
                 <span class="rsvp-corner rsvp-corner-br"></span>
 
 
@@ -122,32 +347,67 @@ const submitRsvp = () => {
                         ✓
                     </div>
 
+
                     <p class="success-eyebrow">
                         Terima Kasih
                     </p>
+
 
                     <h3 class="success-title">
                         Konfirmasi Diterima
                     </h3>
 
+
                     <p class="success-text">
 
                         <template v-if="attendance === 'hadir'">
-                            Kehadiran Anda telah kami catat.
-                            Kami sangat menantikan kehadiran Anda
-                            di hari bahagia kami.
+
+                            Kehadiran
+                            <strong>
+                                {{ guestName }}
+                            </strong>
+                            telah kami catat.
+
+                            Kami sangat menantikan
+                            kehadiran Anda di hari
+                            bahagia kami.
+
                         </template>
 
-                        <template v-else>
-                            Konfirmasi Anda telah kami terima.
-                            Terima kasih telah memberikan kabar
+
+                        <template v-else-if="
+                            attendance ===
+                            'tidak hadir'
+                        ">
+
+                            Konfirmasi Anda telah
+                            kami terima.
+
+                            Terima kasih telah
+                            memberikan kabar
                             kepada kami.
+
+                        </template>
+
+
+                        <template v-else>
+
+                            Konfirmasi Anda telah
+                            kami terima.
+
+                            Terima kasih telah
+                            memberikan kabar
+                            kepada kami.
+
                         </template>
 
                     </p>
 
-                    <button type="button" class="rsvp-reset" @click="submitted = false">
-                        UBAH KONFIRMASI
+
+                    <button type="button" class="rsvp-reset" @click="resetForm">
+
+                        TUTUP
+
                     </button>
 
                 </div>
@@ -160,17 +420,45 @@ const submitRsvp = () => {
                 <form v-else class="rsvp-form" @submit.prevent="submitRsvp">
 
                     <!-- =================================================
-                         NAME
+                         GUEST NAME
                          ================================================= -->
 
                     <div class="form-group">
 
-                        <label for="rsvp-name">
-                            Nama
+                        <label>
+                            Nama Undangan
                         </label>
 
-                        <input id="rsvp-name" v-model="name" type="text" placeholder="Masukkan nama Anda"
-                            autocomplete="name" required />
+
+                        <div class="guest-name-display">
+
+                            <span class="guest-name-icon">
+                                ✦
+                            </span>
+
+
+                            <span>
+                                {{ guestName }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ERROR
+                         ================================================= -->
+
+                    <div v-if="error" class="rsvp-error">
+
+                        <span>
+                            !
+                        </span>
+
+                        <p>
+                            {{ error }}
+                        </p>
 
                     </div>
 
@@ -185,19 +473,25 @@ const submitRsvp = () => {
                             Konfirmasi Kehadiran
                         </label>
 
+
                         <div class="attendance-options">
 
-                            <!-- HADIR -->
+                            <!-- =========================================
+                                 HADIR
+                                 ========================================= -->
 
                             <label class="attendance-option" :class="{
-                                active: attendance === 'hadir'
+                                active:
+                                    attendance === 'hadir'
                             }">
 
-                                <input v-model="attendance" type="radio" value="hadir" />
+                                <input v-model="attendance" type="radio" value="hadir" :disabled="submitting" />
+
 
                                 <span class="attendance-icon">
                                     ✓
                                 </span>
+
 
                                 <span class="attendance-content">
 
@@ -214,17 +508,22 @@ const submitRsvp = () => {
                             </label>
 
 
-                            <!-- TIDAK HADIR -->
+                            <!-- =========================================
+                                 TIDAK HADIR
+                                 ========================================= -->
 
                             <label class="attendance-option" :class="{
-                                active: attendance === 'tidak_hadir'
+                                active:
+                                    attendance === 'tidak hadir'
                             }">
 
-                                <input v-model="attendance" type="radio" value="tidak_hadir" />
+                                <input v-model="attendance" type="radio" value="tidak hadir" :disabled="submitting" />
+
 
                                 <span class="attendance-icon">
                                     —
                                 </span>
+
 
                                 <span class="attendance-content">
 
@@ -249,31 +548,54 @@ const submitRsvp = () => {
                          GUEST COUNTER
                          ================================================= -->
 
-                    <div v-if="attendance === 'hadir'" class="form-group">
+                    <div v-if="
+                        attendance === 'hadir'
+                    " class="form-group">
 
                         <label>
                             Jumlah Tamu
                         </label>
 
+
                         <div class="guest-counter">
 
-                            <button type="button" aria-label="Kurangi jumlah tamu"
-                                @click="guests = Math.max(1, guests - 1)">
+                            <button type="button" aria-label="
+                                    Kurangi jumlah tamu
+                                " :disabled="submitting ||
+                                    guests <= 1
+                                    " @click="
+                                        guests =
+                                        Math.max(
+                                            1,
+                                            guests - 1,
+                                        )
+                                        ">
                                 −
                             </button>
+
 
                             <span>
 
                                 {{ guests }}
 
                                 <small>
-                                    {{ guests > 1 ? 'orang' : 'orang' }}
+                                    orang
                                 </small>
 
                             </span>
 
-                            <button type="button" aria-label="Tambah jumlah tamu"
-                                @click="guests = Math.min(10, guests + 1)">
+
+                            <button type="button" aria-label="
+                                    Tambah jumlah tamu
+                                " :disabled="submitting ||
+                                    guests >= 10
+                                    " @click="
+                                        guests =
+                                        Math.min(
+                                            10,
+                                            guests + 1,
+                                        )
+                                        ">
                                 +
                             </button>
 
@@ -286,11 +608,17 @@ const submitRsvp = () => {
                          SUBMIT
                          ================================================= -->
 
-                    <button type="submit" class="rsvp-submit">
+                    <button type="submit" class="rsvp-submit" :disabled="submitting">
 
-                        <span>
+                        <span v-if="!submitting">
                             KIRIM KONFIRMASI
                         </span>
+
+
+                        <span v-else>
+                            MENGIRIM...
+                        </span>
+
 
                         <i></i>
 
@@ -306,15 +634,18 @@ const submitRsvp = () => {
                  ================================================= -->
 
             <p class="rsvp-footer">
-                Merupakan suatu kehormatan dan kebahagiaan
-                bagi kami apabila Anda berkenan hadir.
+
+                Merupakan suatu kehormatan
+                dan kebahagiaan bagi kami
+                apabila Anda berkenan hadir.
+
             </p>
 
         </div>
 
     </section>
-</template>
 
+</template>
 
 <style scoped>
 /* ================================================================

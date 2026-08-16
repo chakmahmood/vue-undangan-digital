@@ -11,7 +11,7 @@ const router = createRouter({
     },
 
     {
-      path: "/undangan/:slug",
+      path: "/undangan/:eventSlug/:uniqueCode",
       name: "invitation",
       component: () => import("../views/InvitationView.vue"),
     },

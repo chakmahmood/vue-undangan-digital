@@ -1,94 +1,509 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 
-interface Wish {
-    id: number
-    name: string
-    message: string
-    date: string
-}
+import {
+    computed,
+    onMounted,
+    ref,
+} from 'vue'
 
-const name = ref('')
+import {
+    getGuestResponses,
+    submitGuestResponse,
+    type GuestWish,
+} from '../../services/guestResponseService'
+
+
+/* =========================================================
+   PROPS
+   ========================================================= */
+
+const props = defineProps<{
+    invitation: any
+}>()
+
+
+/* =========================================================
+   EVENT
+   ========================================================= */
+
+const eventSlug = computed(() => {
+
+    return (
+        props.invitation?.event?.slug ||
+        ''
+    )
+
+})
+
+
+/* =========================================================
+   GUEST
+   ========================================================= */
+
+const uniqueCode = computed(() => {
+
+    return (
+        props.invitation?.guest?.unique_code ||
+        ''
+    )
+
+})
+
+
+/*
+ * Nama otomatis dari data invitation.
+ *
+ * Tidak ada lagi input nama.
+ */
+const guestName = computed(() => {
+
+    return (
+        props.invitation?.guest?.nama_undangan ||
+        ''
+    )
+
+})
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
 const message = ref('')
+
+
+/* =========================================================
+   WISHES
+   ========================================================= */
+
+const wishes = ref<GuestWish[]>([])
 
 const visibleCount = ref(3)
 
-const wishes = ref<Wish[]>([
-    {
-        id: 1,
-        name: 'Keluarga Besar',
-        message:
-            'Selamat menempuh hidup baru. Semoga menjadi keluarga yang sakinah, penuh kasih sayang, dan selalu diberkahi dalam setiap langkah.',
-        date: '15 Agustus 2026',
-    },
-    {
-        id: 2,
-        name: 'Andi & Keluarga',
-        message:
-            'Selamat berbahagia untuk kedua mempelai. Semoga cinta dan kebahagiaan selalu menyertai perjalanan rumah tangga.',
-        date: '15 Agustus 2026',
-    },
-    {
-        id: 3,
-        name: 'Rina',
-        message:
-            'Barakallah untuk pernikahannya. Semoga menjadi keluarga yang harmonis, langgeng, dan penuh keberkahan.',
-        date: '15 Agustus 2026',
-    },
-    {
-        id: 4,
-        name: 'Budi Santoso',
-        message:
-            'Selamat atas hari bahagianya. Semoga setiap hari menjadi cerita indah yang terus bertambah.',
-        date: '15 Agustus 2026',
-    },
-    {
-        id: 5,
-        name: 'Keluarga Wijaya',
-        message:
-            'Semoga perjalanan baru ini dipenuhi ketenteraman, rezeki yang luas, dan kebahagiaan hingga tua bersama.',
-        date: '15 Agustus 2026',
-    },
-    {
-        id: 6,
-        name: 'Dewi',
-        message:
-            'Happy wedding! Semoga cinta kalian selalu tumbuh dan menjadi rumah terbaik satu sama lain.',
-        date: '15 Agustus 2026',
-    },
-])
 
-const visibleWishes = computed(() =>
-    wishes.value.slice(0, visibleCount.value)
-)
+/* =========================================================
+   STATE
+   ========================================================= */
 
-const hasMore = computed(
-    () => visibleCount.value < wishes.value.length
-)
+const loading = ref(false)
 
-function loadMore() {
-    visibleCount.value += 3
+const loadingMore = ref(false)
+
+const submitting = ref(false)
+
+const error = ref<string | null>(null)
+
+const submitError = ref<string | null>(null)
+
+const submitted = ref(false)
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+const currentPage = ref(1)
+
+const lastPage = ref(1)
+
+const perPage = 20
+
+
+const hasMore = computed(() => {
+
+    return currentPage.value < lastPage.value
+
+})
+
+
+/* =========================================================
+   VISIBLE WISHES
+   ========================================================= */
+
+const visibleWishes = computed(() => {
+
+    return wishes.value.slice(
+        0,
+        visibleCount.value
+    )
+
+})
+
+
+/* =========================================================
+   DATE FORMAT
+   ========================================================= */
+
+function formatDate(
+    date: string
+) {
+
+    if (!date) {
+        return ''
+    }
+
+    try {
+
+        return new Intl.DateTimeFormat(
+            'id-ID',
+            {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            }
+        ).format(
+            new Date(date)
+        )
+
+    } catch {
+
+        return date
+
+    }
+
 }
 
-function submitWish() {
-    if (!name.value.trim() || !message.value.trim()) {
+
+/* =========================================================
+   LOAD FIRST PAGE
+   ========================================================= */
+
+async function loadWishes() {
+
+    if (!eventSlug.value) {
+
+        error.value =
+            'Slug event tidak ditemukan.'
+
         return
     }
 
-    wishes.value.unshift({
-        id: Date.now(),
-        name: name.value.trim(),
-        message: message.value.trim(),
-        date: 'Baru saja',
-    })
 
-    name.value = ''
-    message.value = ''
-    visibleCount.value = Math.max(visibleCount.value, 3)
+    loading.value = true
+
+    error.value = null
+
+
+    try {
+
+        const response =
+            await getGuestResponses(
+                eventSlug.value,
+                1,
+                perPage,
+            )
+
+
+        if (
+            response.status !==
+            'success'
+        ) {
+
+            throw new Error(
+                response.message ||
+                'Gagal mengambil ucapan.'
+            )
+
+        }
+
+
+        wishes.value =
+            response.data || []
+
+
+        currentPage.value =
+            response.meta?.current_page ||
+            1
+
+
+        lastPage.value =
+            response.meta?.last_page ||
+            1
+
+
+        /*
+         * Awalnya tampilkan 3.
+         */
+        visibleCount.value =
+            Math.min(
+                3,
+                wishes.value.length
+            )
+
+    } catch (err: any) {
+
+        console.error(
+            '[WishesSection]',
+            err
+        )
+
+
+        error.value =
+            err?.response?.data?.message ||
+            err?.message ||
+            'Gagal memuat ucapan.'
+
+    } finally {
+
+        loading.value = false
+
+    }
+
 }
+
+
+/* =========================================================
+   LOAD MORE
+   ========================================================= */
+
+async function loadMore() {
+
+    /*
+     * Kalau data page sekarang masih
+     * belum semuanya ditampilkan,
+     * tampilkan 3 lagi.
+     */
+    if (
+        visibleCount.value <
+        wishes.value.length
+    ) {
+
+        visibleCount.value += 3
+
+        return
+    }
+
+
+    /*
+     * Tidak ada page berikutnya.
+     */
+    if (!hasMore.value) {
+
+        return
+
+    }
+
+
+    loadingMore.value = true
+
+    error.value = null
+
+
+    try {
+
+        const nextPage =
+            currentPage.value + 1
+
+
+        const response =
+            await getGuestResponses(
+                eventSlug.value,
+                nextPage,
+                perPage,
+            )
+
+
+        if (
+            response.status !==
+            'success'
+        ) {
+
+            throw new Error(
+                response.message ||
+                'Gagal mengambil ucapan berikutnya.'
+            )
+
+        }
+
+
+        /*
+         * Tambahkan data page berikutnya.
+         */
+        wishes.value.push(
+            ...(response.data || [])
+        )
+
+
+        currentPage.value =
+            response.meta?.current_page ||
+            nextPage
+
+
+        lastPage.value =
+            response.meta?.last_page ||
+            lastPage.value
+
+
+        /*
+         * Tampilkan 3 data tambahan.
+         */
+        visibleCount.value += 3
+
+    } catch (err: any) {
+
+        console.error(
+            '[WishesSection loadMore]',
+            err
+        )
+
+
+        error.value =
+            err?.response?.data?.message ||
+            err?.message ||
+            'Gagal memuat ucapan berikutnya.'
+
+    } finally {
+
+        loadingMore.value = false
+
+    }
+
+}
+
+
+/* =========================================================
+   SUBMIT WISH
+   ========================================================= */
+
+async function submitWish() {
+
+    /*
+     * Pastikan unique code tersedia.
+     */
+    if (!uniqueCode.value) {
+
+        submitError.value =
+            'Kode undangan tidak ditemukan.'
+
+        return
+    }
+
+
+    /*
+     * Pastikan nama guest tersedia.
+     */
+    if (!guestName.value) {
+
+        submitError.value =
+            'Nama undangan tidak ditemukan.'
+
+        return
+    }
+
+
+    /*
+     * Pastikan ucapan tidak kosong.
+     */
+    if (!message.value.trim()) {
+
+        return
+    }
+
+
+    submitting.value = true
+
+    submitError.value = null
+
+    submitted.value = false
+
+
+    try {
+
+        /*
+         * BE saat ini masih menerima:
+         *
+         * unique_code
+         * name
+         * comment
+         *
+         * Tetapi name TIDAK berasal dari input.
+         *
+         * Name diambil otomatis dari:
+         *
+         * invitation.guest.nama_undangan
+         */
+        const response =
+            await submitGuestResponse({
+
+                unique_code:
+                    uniqueCode.value,
+
+                name:
+                    guestName.value,
+
+                comment:
+                    message.value.trim(),
+
+            })
+
+
+        if (
+            response.status !==
+            'success'
+        ) {
+
+            throw new Error(
+                response.message ||
+                'Ucapan gagal dikirim.'
+            )
+
+        }
+
+
+        /*
+         * Reset textarea.
+         */
+        message.value = ''
+
+
+        /*
+         * Tampilkan success.
+         */
+        submitted.value = true
+
+
+        /*
+         * Ambil ulang list dari server.
+         */
+        await loadWishes()
+
+    } catch (err: any) {
+
+        console.error(
+            '[WishesSection submit]',
+            err
+        )
+
+
+        submitError.value =
+            err?.response?.data?.message ||
+            err?.message ||
+            'Ucapan gagal dikirim.'
+
+    } finally {
+
+        submitting.value = false
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+onMounted(() => {
+
+    loadWishes()
+
+})
+
 </script>
 
+
 <template>
+
     <section class="wishes-section">
 
         <!-- =====================================================
@@ -96,11 +511,16 @@ function submitWish() {
              ===================================================== -->
 
         <div class="wishes-ornament wishes-ornament-left">
+
             <img src="/images/circle-ornament.png" alt="" />
+
         </div>
 
+
         <div class="wishes-ornament wishes-ornament-right">
+
             <img src="/images/circle-ornament.png" alt="" />
+
         </div>
 
 
@@ -114,19 +534,29 @@ function submitWish() {
                 Doa & Ucapan
             </p>
 
+
             <div class="wishes-divider">
+
                 <span></span>
+
                 <i></i>
+
                 <span></span>
+
             </div>
+
 
             <h2 class="wishes-title">
                 Kirimkan Ucapan
             </h2>
 
+
             <p class="wishes-description">
-                Doa dan ucapan baik dari keluarga serta sahabat
-                menjadi kebahagiaan tersendiri bagi kami.
+
+                Doa dan ucapan baik dari keluarga
+                serta sahabat menjadi kebahagiaan
+                tersendiri bagi kami.
+
             </p>
 
         </div>
@@ -140,42 +570,104 @@ function submitWish() {
 
             <div class="wishes-form-inner">
 
+
+                <!-- =================================================
+                     FORM HEADING
+                     ================================================= -->
+
                 <div class="wishes-form-heading">
 
                     <span class="wishes-form-icon">
                         ✦
                     </span>
 
+
                     <div>
+
                         <h3>
                             Tinggalkan Ucapan
                         </h3>
 
                         <p>
-                            Sampaikan doa terbaik untuk kedua mempelai.
+                            Sampaikan doa terbaik
+                            untuk kedua mempelai.
                         </p>
+
                     </div>
 
                 </div>
 
 
-                <form @submit.prevent="submitWish">
+                <!-- =================================================
+                     SUCCESS
+                     ================================================= -->
 
-                    <!-- NAME -->
+                <div v-if="submitted" class="wish-submit-success">
 
-                    <div class="form-group">
+                    <span>
+                        ✓
+                    </span>
 
-                        <label for="wish-name">
-                            Nama
-                        </label>
 
-                        <input id="wish-name" v-model="name" type="text" placeholder="Masukkan nama Anda"
-                            autocomplete="name" />
+                    <div>
+
+                        <strong>
+                            Ucapan berhasil dikirim
+                        </strong>
+
+
+                        <small>
+                            Terima kasih atas doa dan
+                            ucapan baik Anda.
+                        </small>
 
                     </div>
 
 
-                    <!-- MESSAGE -->
+                    <button type="button" @click="submitted = false">
+                        Kirim Ucapan Lagi
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     FORM
+                     ================================================= -->
+
+                <form v-else @submit.prevent="submitWish">
+
+
+                    <!-- =================================================
+                         GUEST NAME
+                         ================================================= -->
+
+                    <div class="wish-guest-info">
+
+                        <span class="wish-guest-icon">
+                            ✦
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                Ucapan dari
+                            </small>
+
+
+                            <strong>
+                                {{ guestName || 'Tamu Undangan' }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MESSAGE
+                         ================================================= -->
 
                     <div class="form-group">
 
@@ -183,27 +675,68 @@ function submitWish() {
                             Ucapan
                         </label>
 
-                        <textarea id="wish-message" v-model="message" rows="4"
-                            placeholder="Tuliskan doa dan ucapan terbaik..."></textarea>
+
+                        <textarea id="wish-message" v-model="message" rows="4" maxlength="2000"
+                            placeholder="Tuliskan doa dan ucapan terbaik..." :disabled="submitting"></textarea>
+
+
+                        <small class="wish-character-count">
+
+                            {{ message.length }}/2000
+
+                        </small>
 
                     </div>
 
 
-                    <!-- SUBMIT -->
+                    <!-- =================================================
+                         ERROR
+                         ================================================= -->
 
-                    <button type="submit" class="wish-submit" :disabled="!name.trim() || !message.trim()">
+                    <p v-if="submitError" class="wish-form-error">
+
+                        {{ submitError }}
+
+                    </p>
+
+
+                    <!-- =================================================
+                         SUBMIT
+                         ================================================= -->
+
+                    <button type="submit" class="wish-submit" :disabled="submitting ||
+                        !guestName ||
+                        !uniqueCode ||
+                        !message.trim()
+                        ">
 
                         <span>
-                            Kirim Ucapan
+
+                            {{
+                                submitting
+                                    ? 'Mengirim...'
+                                    : 'Kirim Ucapan'
+                            }}
+
                         </span>
 
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+
+                        <svg v-if="!submitting" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+
                             <path d="M5 12h14" />
 
                             <path d="m13 6 6 6-6 6" />
+
                         </svg>
 
+
+                        <span v-else class="wish-loading">
+                            ...
+                        </span>
+
                     </button>
+
 
                 </form>
 
@@ -213,110 +746,219 @@ function submitWish() {
 
 
         <!-- =====================================================
-             WISHES LIST
+             LIST
              ===================================================== -->
 
         <div class="wishes-list">
 
-            <div v-for="(wish, index) in visibleWishes" :key="wish.id" class="wish-card"
-                :style="{ '--wish-index': index }">
 
-                <!-- TOP -->
+            <!-- =================================================
+                 LOADING
+                 ================================================= -->
 
-                <div class="wish-card-top">
+            <div v-if="loading" class="wishes-loading">
 
-                    <div class="wish-avatar">
+                <div class="wishes-spinner"></div>
 
-                        {{ wish.name.charAt(0).toUpperCase() }}
 
-                    </div>
+                <p>
+                    Memuat ucapan...
+                </p>
 
-                    <div class="wish-meta">
+            </div>
 
-                        <h3>
-                            {{ wish.name }}
-                        </h3>
 
-                        <span>
-                            {{ wish.date }}
+            <!-- =================================================
+                 ERROR
+                 ================================================= -->
+
+            <div v-else-if="
+                error &&
+                !wishes.length
+            " class="wishes-error">
+
+                <p>
+                    {{ error }}
+                </p>
+
+
+                <button type="button" @click="loadWishes">
+                    Coba Lagi
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMPTY
+                 ================================================= -->
+
+            <div v-else-if="!wishes.length" class="wishes-empty">
+
+                <span>
+                    ✦
+                </span>
+
+
+                <p>
+                    Belum ada ucapan.
+                </p>
+
+
+                <small>
+                    Jadilah yang pertama memberikan doa
+                    untuk kedua mempelai.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 WISHES
+                 ================================================= -->
+
+            <template v-else>
+
+                <div v-for="(
+wish,
+    index
+                    ) in visibleWishes" :key="wish.id" class="wish-card" :style="{
+                        '--wish-index': index
+                    }">
+
+
+                    <!-- TOP -->
+
+                    <div class="wish-card-top">
+
+
+                        <!-- AVATAR -->
+
+                        <div class="wish-avatar">
+
+                            {{
+                                wish.name
+                                    .charAt(0)
+                                    .toUpperCase()
+                            }}
+
+                        </div>
+
+
+                        <!-- META -->
+
+                        <div class="wish-meta">
+
+                            <h3>
+                                {{ wish.name }}
+                            </h3>
+
+
+                            <span>
+
+                                {{
+                                    formatDate(
+                                        wish.submitted_at
+                                    )
+                                }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- STAR -->
+
+                        <span class="wish-star">
+                            ✦
                         </span>
 
                     </div>
 
-                    <span class="wish-star">
-                        ✦
-                    </span>
+
+                    <!-- MESSAGE -->
+
+                    <p class="wish-message">
+
+                        “{{ wish.comment }}”
+
+                    </p>
+
+
+                    <!-- BOTTOM -->
+
+                    <div class="wish-card-bottom">
+
+                        <span></span>
+
+                        <span>
+                            Dengan doa terbaik
+                        </span>
+
+                        <span></span>
+
+                    </div>
 
                 </div>
 
 
-                <!-- MESSAGE -->
+                <!-- =================================================
+                     LOAD MORE
+                     ================================================= -->
 
-                <p class="wish-message">
-                    “{{ wish.message }}”
-                </p>
+                <div v-if="
+                    visibleCount <
+                    wishes.length ||
+                    hasMore
+                " class="wishes-more">
+
+                    <button type="button" class="load-more-button" :disabled="loadingMore" @click="loadMore">
+
+                        <span>
+
+                            {{
+                                loadingMore
+                                    ? 'Memuat...'
+                                    : 'Muat Ucapan Berikutnya'
+                            }}
+
+                        </span>
 
 
-                <!-- BOTTOM -->
+                        <svg v-if="!loadingMore" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
 
-                <div class="wish-card-bottom">
+                            <path d="M12 5v14" />
 
-                    <span></span>
+                            <path d="m6 13 6 6 6-6" />
 
-                    <span>
-                        Dengan doa terbaik
-                    </span>
+                        </svg>
 
-                    <span></span>
+                    </button>
 
                 </div>
 
-            </div>
-
-
-            <!-- EMPTY -->
-
-            <div v-if="visibleWishes.length === 0" class="wishes-empty">
-                Belum ada ucapan.
-            </div>
+            </template>
 
         </div>
 
 
         <!-- =====================================================
-             LOAD MORE
-             ===================================================== -->
-
-        <div v-if="hasMore" class="wishes-more">
-
-            <button type="button" class="load-more-button" @click="loadMore">
-
-                <span>
-                    Muat Ucapan Berikutnya
-                </span>
-
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M12 5v14" />
-                    <path d="m6 13 6 6 6-6" />
-                </svg>
-
-            </button>
-
-        </div>
-
-
-        <!-- =====================================================
-             FOOTER MESSAGE
+             FOOTER
              ===================================================== -->
 
         <div class="wishes-footer">
 
             <div class="wishes-footer-line"></div>
 
+
             <p>
+
                 Terima kasih atas doa dan kasih sayang
                 yang telah diberikan kepada kami.
+
             </p>
+
 
             <span class="wishes-footer-symbol">
                 ❦
@@ -325,8 +967,8 @@ function submitWish() {
         </div>
 
     </section>
-</template>
 
+</template>
 
 <style scoped>
 /* ================================================================

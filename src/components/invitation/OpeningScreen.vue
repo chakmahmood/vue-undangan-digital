@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
+defineProps<{
+    invitation: any
+}>()
+
 const opened = ref(false)
 
 function openInvitation() {
@@ -138,11 +142,11 @@ onUnmounted(() => {
                     </p>
 
                     <p class="guest-name">
-                        Pengurus Maktabah
+                        {{ invitation.guest?.nama_undangan || 'Tamu Undangan' }}
                     </p>
 
                     <p class="guest-address">
-                        Jl. Mojo No. 123, Kota Kediri
+                        {{ invitation.guest?.alamat_lengkap || ' ' }}
                     </p>
 
                     <p class="guest-note">
