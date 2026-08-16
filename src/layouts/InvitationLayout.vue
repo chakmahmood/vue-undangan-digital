@@ -2,6 +2,7 @@
 import {
     computed,
     onMounted,
+    onBeforeUnmount,
     ref,
 } from 'vue'
 
@@ -82,6 +83,88 @@ const event = ref<any>(null)
 
 const guest = ref<any>(null)
 
+/* ================================================================
+AUDIO
+================================================================ */
+
+const audio = ref<HTMLAudioElement | null>(null)
+
+const isPlaying = ref(false)
+
+const audioSrc = '/audio/wedding-music.mp3'
+
+
+async function startAudio() {
+
+    if (!audio.value) {
+        return
+    }
+
+    try {
+
+        await audio.value.play()
+
+        isPlaying.value = true
+
+    } catch (error) {
+
+        console.warn(
+            '[Audio] Gagal memutar audio:',
+            error
+        )
+
+        isPlaying.value = false
+
+    }
+
+}
+
+
+function toggleAudio() {
+
+    if (!audio.value) {
+        return
+    }
+
+    if (audio.value.paused) {
+
+        startAudio()
+
+    } else {
+
+        audio.value.pause()
+
+        isPlaying.value = false
+
+    }
+
+}
+
+
+onMounted(() => {
+
+    audio.value = new Audio(audioSrc)
+
+    audio.value.loop = true
+
+    audio.value.volume = 0.45
+
+})
+
+
+onBeforeUnmount(() => {
+
+    if (audio.value) {
+
+        audio.value.pause()
+
+        audio.value.currentTime = 0
+
+        audio.value = null
+
+    }
+
+})
 
 /* ================================================================
    ROUTE PARAMS
@@ -298,12 +381,28 @@ onMounted(
     ============================================================= -->
 
     <div v-else class="invitation">
+        <!-- AUDIO CONTROL -->
+        <button type="button" class="audio-control" :class="{ playing: isPlaying }"
+            :aria-label="isPlaying ? 'Pause musik' : 'Play musik'" @click="toggleAudio">
+            <!-- PAUSE / MUSIC -->
+            <svg v-if="isPlaying" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l10-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="16" cy="16" r="3" />
+            </svg>
+
+            <!-- PLAY -->
+            <svg v-else viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5.5v13L18 12 8 5.5Z" />
+            </svg>
+        </button>
 
         <!-- ========================================================
              OPENING
         ========================================================= -->
 
-        <OpeningScreen :invitation="invitation" />
+        <OpeningScreen :invitation="invitation" @opened="startAudio" />
 
 
         <!-- ========================================================
@@ -662,6 +761,126 @@ onMounted(
         font-size:
             21px;
 
+    }
+
+}
+
+/* =========================================================
+   AUDIO CONTROL
+   ========================================================= */
+
+.audio-control {
+    position: fixed;
+    z-index: 99999;
+
+    right: 18px;
+    top: 50%;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(214, 177, 94, 0.65);
+    border-radius: 50%;
+
+    background: rgba(36, 28, 22, 0.82);
+
+    color: #f0d78a;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.25),
+        inset 0 0 12px rgba(240, 215, 138, 0.05);
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.audio-control:hover {
+    transform:
+        translateY(-50%) scale(1.08);
+
+    border-color: #f0d78a;
+
+    background:
+        rgba(48, 36, 27, 0.95);
+}
+
+.audio-control:active {
+    transform:
+        translateY(-50%) scale(0.94);
+}
+
+.audio-control svg {
+    width: 17px;
+    height: 17px;
+}
+
+
+/* =========================================================
+   PLAYING EFFECT
+   ========================================================= */
+
+.audio-control.playing::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -5px;
+
+    border: 1px solid rgba(240, 215, 138, 0.35);
+
+    border-radius: 50%;
+
+    animation:
+        audioPulse 2s ease-out infinite;
+}
+
+
+@keyframes audioPulse {
+
+    0% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1.45);
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .audio-control {
+        right: 12px;
+
+        width: 36px;
+        height: 36px;
+    }
+
+    .audio-control svg {
+        width: 15px;
+        height: 15px;
     }
 
 }

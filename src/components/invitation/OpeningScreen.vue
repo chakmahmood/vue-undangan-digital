@@ -5,11 +5,16 @@ defineProps<{
     invitation: any
 }>()
 
+const emit = defineEmits<{
+    opened: []
+}>()
+
 const opened = ref(false)
 
 function openInvitation() {
     opened.value = true
     document.body.style.overflow = 'auto'
+    emit('opened')
 }
 
 onMounted(() => {
