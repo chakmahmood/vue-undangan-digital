@@ -1,3 +1,5 @@
+import gallery1 from "../assets/images/aqadan.jpeg";
+
 export const invitation = {
   groom: {
     name: "Hadi",
@@ -33,10 +35,10 @@ export const invitation = {
   },
 
   gallery: [
+    gallery1,
     "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
     "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200",
     "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1200",
-    "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=1200",
   ],
 
   story: [

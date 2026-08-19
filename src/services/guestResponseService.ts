@@ -8,13 +8,31 @@ const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 
 export interface GuestWish {
   id: number;
+
   guest_id: number | null;
+
+  /*
+   * Nama yang dikirim saat tamu membuat ucapan.
+   *
+   * Sekarang berasal dari input nama tamu,
+   * bukan dari guest.nama_undangan.
+   */
   name: string;
+
   comment: string;
+
   submitted_at: string;
+
   created_at?: string;
+
   updated_at?: string;
 
+  /*
+   * Relasi guest masih boleh ada dari backend.
+   *
+   * Tidak digunakan untuk menentukan nama
+   * pada form ucapan.
+   */
   guest?: {
     id: number;
     event_id: number;
@@ -24,6 +42,7 @@ export interface GuestWish {
 
 export interface GuestWishListResponse {
   status: string;
+
   message?: string;
 
   event?: {
@@ -42,14 +61,19 @@ export interface GuestWishListResponse {
   };
 
   current_page?: number;
+
   last_page?: number;
+
   per_page?: number;
+
   total?: number;
 }
 
 export interface GuestWishResponse {
   status: string;
+
   message?: string;
+
   data: GuestWish;
 }
 
@@ -83,11 +107,27 @@ export async function getGuestResponses(
    SUBMIT WISH
    ========================================================= */
 
-export async function submitGuestResponse(payload: {
-  unique_code?: string;
+export interface SubmitGuestResponsePayload {
+  /*
+   * Tetap diperlukan untuk mengidentifikasi
+   * invitation/event.
+   */
+  unique_code: string;
+
+  /*
+   * Nama sekarang diketik sendiri oleh tamu.
+   */
   name: string;
+
+  /*
+   * Isi doa / ucapan.
+   */
   comment: string;
-}): Promise<GuestWishResponse> {
+}
+
+export async function submitGuestResponse(
+  payload: SubmitGuestResponsePayload,
+): Promise<GuestWishResponse> {
   const response = await axios.post<GuestWishResponse>(
     `${API_URL}/guest-response`,
     payload,

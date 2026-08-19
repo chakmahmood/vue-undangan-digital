@@ -140,7 +140,7 @@ onUnmounted(() => {
 
 
                 <!-- GUEST -->
-                <div class="guest-section">
+                <!-- <div class="guest-section">
 
                     <p class="guest-label">
                         Kepada Yth. Bapak/Ibu/Saudara/i
@@ -159,7 +159,7 @@ onUnmounted(() => {
                         penulisan nama dan gelar
                     </p>
 
-                </div>
+                </div> -->
 
                 <!-- OPEN BUTTON -->
 

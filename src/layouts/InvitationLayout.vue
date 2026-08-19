@@ -33,11 +33,11 @@ import CountdownSection
 import GallerySection
     from '../components/invitation/GallerySection.vue'
 
-import RSVPSection
-    from '../components/invitation/RSVPSection.vue'
+// import RSVPSection
+//     from '../components/invitation/RSVPSection.vue'
 
 import WishesSection
-    from '../components/invitation/WishesSection.vue'
+    from '../components/invitation/WishesSection2.vue'
 
 import GiftSection
     from '../components/invitation/GiftSection.vue'

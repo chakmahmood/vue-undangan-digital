@@ -280,10 +280,8 @@ function formatNumber(value: number) {
 
 
                 <div class="countdown-photo">
-
-                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200"
+                    <img :src="invitation.gallery[0]"
                         :alt="`The Wedding of ${invitation.groom.fullName} & ${invitation.bride.fullName}`" />
-
                 </div>
 
             </div>
