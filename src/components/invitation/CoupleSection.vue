@@ -52,8 +52,7 @@ defineProps<{
                     <!-- Photo -->
                     <div class="couple-photo">
 
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800"
-                            :alt="invitation.groom.fullName" />
+                        <img :src="invitation.gallery[6]" :alt="invitation.groom.fullName" />
 
                     </div>
 
@@ -134,8 +133,7 @@ defineProps<{
                     <!-- Photo -->
                     <div class="couple-photo">
 
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800"
-                            :alt="invitation.bride.fullName" />
+                        <img :src="invitation.gallery[7]" :alt="invitation.bride.fullName" />
 
                     </div>
 

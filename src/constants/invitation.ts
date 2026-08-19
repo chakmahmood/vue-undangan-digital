@@ -1,4 +1,11 @@
-import gallery1 from "../assets/images/aqadan.jpeg";
+import gallery0 from "../assets/images/aqadan.jpeg";
+import gallery1 from "../assets/images/galeri1.jpeg";
+import gallery2 from "../assets/images/galeri2.jpeg";
+import gallery3 from "../assets/images/galeri3.jpeg";
+import gallery4 from "../assets/images/galeri4.jpeg";
+import gallery5 from "../assets/images/galeri5.jpeg";
+import hadi from "../assets/images/hadi.jpg";
+import diyan from "../assets/images/diyan.jpg";
 
 export const invitation = {
   groom: {
@@ -36,9 +43,13 @@ export const invitation = {
 
   gallery: [
     gallery1,
-    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200",
-    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1200",
+    gallery0,
+    gallery2,
+    gallery3,
+    gallery4,
+    gallery5,
+    hadi,
+    diyan,
   ],
 
   story: [
