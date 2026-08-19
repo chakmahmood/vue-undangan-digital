@@ -127,10 +127,10 @@ function handleKeydown(event: KeyboardEvent) {
                      MAIN IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[0]" class="gallery-item gallery-item-main" type="button"
-                    @click="openImage(galleryImages[0])">
+                <button v-if="galleryImages[1]" class="gallery-item gallery-item-main" type="button"
+                    @click="openImage(galleryImages[1])">
 
-                    <img :src="galleryImages[0]" alt="Momen pernikahan" />
+                    <img :src="galleryImages[1]" alt="Momen pernikahan" />
 
 
                     <div class="gallery-overlay">
@@ -156,10 +156,10 @@ function handleKeydown(event: KeyboardEvent) {
                      SECOND IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[1]" class="gallery-item gallery-item-second" type="button"
-                    @click="openImage(galleryImages[1])">
+                <button v-if="galleryImages[2]" class="gallery-item gallery-item-second" type="button"
+                    @click="openImage(galleryImages[2])">
 
-                    <img :src="galleryImages[1]" alt="Momen pernikahan" />
+                    <img :src="galleryImages[2]" alt="Momen pernikahan" />
 
 
                     <div class="gallery-overlay">
@@ -183,10 +183,10 @@ function handleKeydown(event: KeyboardEvent) {
                      THIRD IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[2]" class="gallery-item gallery-item-third" type="button"
-                    @click="openImage(galleryImages[2])">
+                <button v-if="galleryImages[3]" class="gallery-item gallery-item-third" type="button"
+                    @click="openImage(galleryImages[3])">
 
-                    <img :src="galleryImages[2]" alt="Momen pernikahan" />
+                    <img :src="galleryImages[3]" alt="Momen pernikahan" />
 
 
                     <div class="gallery-overlay">
@@ -210,10 +210,10 @@ function handleKeydown(event: KeyboardEvent) {
                      FOURTH IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[3]" class="gallery-item gallery-item-fourth" type="button"
-                    @click="openImage(galleryImages[3])">
+                <button v-if="galleryImages[4]" class="gallery-item gallery-item-fourth" type="button"
+                    @click="openImage(galleryImages[4])">
 
-                    <img :src="galleryImages[3]" alt="Momen pernikahan" />
+                    <img :src="galleryImages[4]" alt="Momen pernikahan" />
 
 
                     <div class="gallery-overlay">
@@ -237,10 +237,10 @@ function handleKeydown(event: KeyboardEvent) {
                      FIFTH IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[4]" class="gallery-item gallery-item-fifth" type="button"
-                    @click="openImage(galleryImages[4])">
+                <button v-if="galleryImages[5]" class="gallery-item gallery-item-fifth" type="button"
+                    @click="openImage(galleryImages[5])">
 
-                    <img :src="galleryImages[4]" alt="Momen pernikahan" />
+                    <img :src="galleryImages[5]" alt="Momen pernikahan" />
 
 
                     <div class="gallery-overlay">
@@ -264,7 +264,7 @@ function handleKeydown(event: KeyboardEvent) {
                      SIXTH IMAGE
                      ============================================= -->
 
-                <button v-if="galleryImages[5]" class="gallery-item gallery-item-sixth" type="button"
+                <!-- <button v-if="galleryImages[5]" class="gallery-item gallery-item-sixth" type="button"
                     @click="openImage(galleryImages[5])">
 
                     <img :src="galleryImages[5]" alt="Momen pernikahan" />
@@ -283,7 +283,7 @@ function handleKeydown(event: KeyboardEvent) {
                         06
                     </span>
 
-                </button>
+                </button> -->
 
             </div>
 
